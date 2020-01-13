@@ -2,6 +2,7 @@
 
 @section('content')
 <br>
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -83,10 +84,12 @@
                     <div class="row">
                         <div class="col">
                             <a href="{{route('redirect',['provider'=>'google'])}}"
-                                class="sign-in-with-google"><span>@lang('messages.loginwith') <strong>Google</strong></span>
+                                class="sign-in-with-google"><span>@lang('messages.loginwith')
+                                    <strong>Google</strong></span>
                             </a>
 
-                            <a href="{{route('redirect',['provider'=>'facebook'])}}" class="fb connect float-right">@lang('messages.loginwith')
+                            <a href="{{route('redirect',['provider'=>'facebook'])}}"
+                                class="fb connect float-right">@lang('messages.loginwith')
                                 Facebook
                             </a>
                         </div>

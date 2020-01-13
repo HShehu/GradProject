@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades;
 use Socialite;
@@ -76,9 +77,8 @@ class LoginController extends Controller
 
         $user = $this->userFindorCreate($provider_user, $provider);
         Auth::login($user, true);
-        return redirect()->route('home',app()->getLocale());
-    
-        $token = $user->token;
+        return redirect('/');
+        // $token = $user->token;
     }
 
     public function userFindorCreate($p_user, $provider)
@@ -87,6 +87,12 @@ class LoginController extends Controller
 
         if (!$user) {
             $user = new User;
+            if (Role::where('name', 'user')) {
+                $user->assignRole('user');
+            } else {
+                Role::create(['name' => 'writer']);
+                $user->assignRole('user');
+            }
             $user->name = $p_user->getName();
             $user->email = $p_user->getEmail();
             $user->provider = $provider;

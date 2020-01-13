@@ -51,13 +51,13 @@
                 </a>
 
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    @if (Auth::user()->hasRole('admin'))
+                    {{-- @if (Auth::user()->hasRole('admin'))
                     <a class="dropdown-item" href="{{route('admin')}}">Admin Dashboard</a>
                     @endif
 
                     @if (Auth::user()->hasRole('user'))
                     <a class="dropdown-item" href="{{route('user', app()->getLocale())}}">User Dashboard</a>
-                    @endif
+                    @endif --}}
 
                     <a class="dropdown-item" href="{{route('logout', app()->getLocale())}}">
                         @lang('messages.logout')
