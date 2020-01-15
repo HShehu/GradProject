@@ -70,14 +70,7 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        if (Role::where('name', 'user')) {
-            dd("Role exists");
-        } else {
-            Role::create(['name' => 'writer']);
-        }
-
-        $user->assignRole('user');
-
+        $user->assignRole('super-admin');
         return $user;
     }
 }

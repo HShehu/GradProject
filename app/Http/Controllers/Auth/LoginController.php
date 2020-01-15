@@ -50,7 +50,7 @@ class LoginController extends Controller
      */
     public function redirectToProvider($provider)
     {
-        // dd($provider);
+ 
         return Socialite::driver($provider)->redirect();
     }
 
@@ -77,7 +77,7 @@ class LoginController extends Controller
 
         $user = $this->userFindorCreate($provider_user, $provider);
         Auth::login($user, true);
-        return redirect('/');
+        return redirect()->back();
         // $token = $user->token;
     }
 
@@ -87,12 +87,7 @@ class LoginController extends Controller
 
         if (!$user) {
             $user = new User;
-            if (Role::where('name', 'user')) {
-                $user->assignRole('user');
-            } else {
-                Role::create(['name' => 'writer']);
-                $user->assignRole('user');
-            }
+            $user->assignRole('super-admin'); 
             $user->name = $p_user->getName();
             $user->email = $p_user->getEmail();
             $user->provider = $provider;

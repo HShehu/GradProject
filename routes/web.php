@@ -13,39 +13,75 @@ use App\Blog;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });app()->getLocale(),
 Route::group([
   'prefix' => '{locale}',
   'where' => ['locale' => '[a-zA-Z]{2}'],
   'middleware' => 'setlocale'], function () {
-      Route::group(['middleware' => ['auth']], function () {
-          Route::get('/user', 'UserController@user')->name('user');
-          Route::name('blog_path')->get('/blog/{blog}', 'BlogController@show');
-      });
-      Route::name('blogs_path')->get('/', 'BlogController@index');
-      Route::name('all-views_blog_path')->get('/all-views', 'BlogController@all_views');
       Auth::routes();
-      
-      Route::get('/home', 'HomeController@index')->name('home');
+    
       Route::get('/logout', function () {
           Auth::logout();
           return redirect('/');
       });
-  });
 
-Route::group(['middleware' => ['admin']], function () {
-    Route::get('/admin', 'UserController@admin')->name('admin');
-    Route::name('create_blog_path')->get('/blog/create', 'BlogController@create');
-    Route::name('store_blog_path')->post('/blog', 'BlogController@store');
-    Route::name('edit_blog_path')->get('/blog/{blog}/edit', 'BlogController@edit');
-    Route::name('update_blog_path')->put('/blog/{blog}', 'BlogController@update');
-    Route::name('delete_blog_path')->delete('/blog/{blog}', 'BlogController@destroy');
+
+      //Users Views With Multilingual Functionality
+      Route::name('users.index')->get('/users', 'UserController@index');
+      Route::name('users.create')->get('/users/create', 'UserController@create');
+      Route::name('users.edit')->get('/users/{user}/edit', 'UserController@edit');
+      Route::name('users.show')->get('/users/{user}', 'UserController@show');
+
+      //Roles Views With Multilingual Functionality
+      Route::name('roles.index')->get('/roles', 'RoleController@index');
+      Route::name('roles.create')->get('/roles/create', 'RoleController@create');
+      Route::name('roles.edit')->get('/roles/{role}/edit', 'RoleController@edit');
+      Route::name('roles.show')->get('/roles/{role}', 'RoleController@show');
+
+      //Permissions Views With Multilingual Functionality
+      Route::name('permissions.index')->get('/permissions', 'PermissionController@index');
+      Route::name('permissions.create')->get('/permissions/create', 'PermissionController@create');
+      Route::name('permissions.edit')->get('/permissions/{permission}/edit', 'PermissionController@edit');
+      Route::name('permissions.show')->get('/permissions/{permission}', 'PermissionController@show');
+      
+      //Blog Views With Multilingual Functionality
+      Route::name('all-views_blog_path')->get('/all-views', 'BlogController@all_views');
+      Route::name('blogs.index')->get('/', 'BlogController@index');
+      Route::name('blogs.create')->get('/blogs/create', 'BlogController@create');
+      Route::name('blogs.edit')->get('/blogs/{blog}/edit', 'BlogController@edit');
+      Route::name('blogs.show')->get('/blogs/{blog}', 'BlogController@show');
+      
+      Route::group(['middleware' => ['role:super-admin']], function () {
+          Route::get('/admin', 'UserController@admin')->name('admin');
+      });
+  });
+    
+Route::group(['middleware' => ['role:super-admin']], function () {
+    Route::name('roles.update')->put('/roles/{role}', 'RoleController@update');
+    Route::name('roles.destroy')->delete('/roles/{role}', 'RoleController@destroy');
+    Route::name('roles.store')->post('/roles', 'RoleController@store');
+
+    Route::name('users.update')->put('/users/{user}', 'UserController@update');
+    Route::name('users.destroy')->delete('/users/{user}', 'UserController@destroy');
+    Route::name('users.store')->post('/users', 'UserController@store');
+
+    Route::name('permissions.update')->put('/permissions/{permission}', 'PermissionController@update');
+    Route::name('permissions.destroy')->delete('/permissions/{permission}', 'PermissionController@destroy');
+    Route::name('permissions.store')->post('/permissions', 'PermissionController@store');
 });
+
+
+Route::group(['middleware' => ['permission:edit blog posts']], function () {
+    Route::name('blogs.update')->put('/blogs/{blog}', 'BlogController@update');
+    Route::name('blogs.destroy')->delete('/blogs/{blog}', 'BlogController@destroy');
+    Route::name('blogs.store')->post('/blogs', 'BlogController@store');
+});
+
+
+
 
 Route::name('redirect')->get('/{provider}', 'Auth\LoginController@redirectToProvider');
 Route::name('callback')->get('/{provider}/callback', 'Auth\LoginController@handleProviderCallback');
+
 Route::name('comment_add')->post('/comment/store', 'CommentController@store');
 Route::name('reply_add')->post('/reply/store', 'CommentController@replyStore');
 Route::get('/', function () {

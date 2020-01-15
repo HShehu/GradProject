@@ -77,13 +77,8 @@
 
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="{{route('blogs_path', app()->getLocale())}}">
+                <a class="nav-link" href="{{route('blogs.index', app()->getLocale())}}">
                     @lang('messages.home')
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{route('all-views_blog_path',app()->getLocale())}}" class="nav-link">
-                    @lang('messages.allviews')
                 </a>
             </li>
         </ul>

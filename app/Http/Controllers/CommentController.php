@@ -8,7 +8,12 @@ use App\Comment;
 
 class CommentController extends Controller
 {
-     public function store(Request $request)
+    public function __construct()
+    {
+        $this->middleware(['auth']);
+    }
+    
+    public function store(Request $request)
     {
         $comment = new Comment;
         $comment->body = $request->get('comment_body');

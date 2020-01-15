@@ -24,14 +24,14 @@ class BlogController extends Controller
     {
         $blogs = Blog::paginate(2);
 
-        return view('blog.index',['blogs'=>$blogs]);
+        return view('blogs.index', ['blogs'=>$blogs]);
     }
 
     public function all_views()
     {
         //
         $blogs = Blog::all();
-        return view('blog.all-views',['blogs'=>$blogs]);
+        return view('blog.all-views', ['blogs'=>$blogs]);
     }
 
     /**
@@ -41,7 +41,7 @@ class BlogController extends Controller
      */
     public function create()
     {
-        return view('blog.create');
+        return view('blogs.create');
     }
 
     /**
@@ -50,32 +50,48 @@ class BlogController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $locale)
     {
+
+        // Validate Fields
+
+        $request->validate([
+            'title.*' => 'required|unique_translation:blogs',
+            'content.*' => 'required',
+            'notes.*' => 'nullable',
+            'image_notes.*' => 'nullable',
+            'image_notes2.*' => 'nullable',
+            'image' => 'required|image',
+            'image2' => 'nullable|image',
+        ]);
+        
+        //Store Fields
+
         $blog = new Blog;
 
         //Image 1 storage
-        $path = Storage::disk('uploads')->putfile('img',$request->file('image'));
+        $path = Storage::disk('uploads')->putfile('img', $request->file('image'));
         $blog->image= $path;
 
         //Image2 Storage
         if ($request->image2) {
-            $path = Storage::disk('uploads')->putfile('img',$request->file('image2'));
+            $path = Storage::disk('uploads')->putfile('img', $request->file('image2'));
+            $blog->image2 = $path;
         }
-
-        foreach (config('app.available_locales') as $locale) 
-        {
-            $blog 
-            ->setTranslation('title', $locale, $request->{$locale.'_title'})
-            ->setTranslation('content', $locale, $request->{$locale.'_content'})
-            ->setTranslation('notes', $locale, $request->{$locale.'_notes'})
-            ->setTranslation('image_notes', $locale, $request->{$locale.'_image_notes'})
-            ->setTranslation('image2_notes', $locale, $request->{$locale.'_image2_notes'});
+     
+        
+        foreach (config('app.available_locales') as $locale) {
+            $blog
+            ->setTranslation('title', $locale, $request->title[$locale])
+            ->setTranslation('content', $locale, $request->content[$locale])
+            ->setTranslation('notes', $locale, $request->notes[$locale])
+            ->setTranslation('image_notes', $locale, $request->image_notes[$locale])
+            ->setTranslation('image2_notes', $locale, $request->image2_notes[$locale]);
         }
         
         $blog->save();
             
-        return redirect()->route('admin');
+        return redirect()->route('admin',['locale' => app()->getLocale()]);
     }
 
     /**
@@ -84,13 +100,13 @@ class BlogController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($locale = null,$id)
+    public function show($locale = null, $id)
     {
-        $blog = Blog::find($id);
+        $blog = Blog::findOrFail($id);
 
         $path = url()->current();
         
-        return view('blog.show',['blog'=>$blog,'path'=>$path]);
+        return view('blogs.show', ['blog'=>$blog,'path'=>$path]);
     }
 
     // /**
@@ -99,10 +115,10 @@ class BlogController extends Controller
     //  * @param  int  $id
     //  * @return \Illuminate\Http\Response
     //  */
-    public function edit($id)
+    public function edit($locale, $id)
     {
-        $blog = Blog::find($id);
-        return view('blog.edit',['blog' => $blog]);
+        $blog = Blog::findOrFail($id);
+        return view('blogs.edit', ['blog' => $blog]);
     }
 
     // /**
@@ -112,32 +128,47 @@ class BlogController extends Controller
     //  * @param  int  $id
     //  * @return \Illuminate\Http\Response
     //  */
-    public function update(Request $request, $id)
+    public function update(Request $request, $locale, $id)
     {
-        $blog = Blog::find($id);
+        
+        $blog = Blog::findOrFail($id);
+
+        // Validate Fields
+
+        // dd($blog);
+        $request->validate([
+            'title.*' => "required|unique_translation:blogs,title,$blog->id",
+            'content.*' => 'required',
+            'notes.*' => 'nullable',
+            'image_notes.*' => 'nullable',
+            'image_notes2.*' => 'nullable',
+            'image' => 'required|image',
+            'image2' => 'nullable|image',
+        ]);
+        
+        //Update Fields
 
         //Image 1 Storage
-        $path = Storage::disk('uploads')->putfile('img',$request->file('image'));
+        $path = Storage::disk('uploads')->putfile('img', $request->file('image'));
         $blog->image= $path;
 
         //Image 2 Storage
-         if ($request->image2) {
-            $path = Storage::disk('uploads')->putfile('img',$request->file('image2'));
+        if ($request->image2) {
+            $path = Storage::disk('uploads')->putfile('img', $request->file('image2'));
         }
         
-        foreach (config('app.available_locales') as $locale) 
-        {
-            $blog 
-            ->setTranslation('title', $locale, $request->{$locale.'_title'})
-            ->setTranslation('content', $locale, $request->{$locale.'_content'})
-            ->setTranslation('notes', $locale, $request->{$locale.'_notes'})
-            ->setTranslation('image_notes', $locale, $request->{$locale.'_image_notes'})
-            ->setTranslation('image2_notes', $locale, $request->{$locale.'_image2_notes'});
+        foreach (config('app.available_locales') as $locale) {
+            $blog
+            ->setTranslation('title', $locale, $request->title[$locale])
+            ->setTranslation('content', $locale, $request->content[$locale])
+            ->setTranslation('notes', $locale, $request->notes[$locale])
+            ->setTranslation('image_notes', $locale, $request->image_notes[$locale])
+            ->setTranslation('image2_notes', $locale, $request->image2_notes[$locale]);
         }
         
         $blog->update();
 
-        return redirect()->route('admin');
+        return redirect()->route('admin',['locale' => app()->getLocale()]);
     }
 
     // /**
@@ -147,11 +178,10 @@ class BlogController extends Controller
     //  * @return \Illuminate\Http\Response
     //  */
 
-    public function destroy($id)
+    public function destroy($locale, $id)
     {
-        $blog = Blog::find($id);
+        $blog = Blog::findOrFail($id);
         $blog->delete();
-        return redirect()->route('admin');
+        return redirect()->route('admin',['locale' => app()->getLocale()]);
     }
-
 }

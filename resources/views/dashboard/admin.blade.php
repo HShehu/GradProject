@@ -1,71 +1,44 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <br>
-    <a class="btn btn-outline-success" href="{{route('create_blog_path')}}">Create Viewpoint</a>
+<div class="row">
+    @include('dashboard.sidenav')
 
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <br>
-            <div class="card">
-                <div class="card-header">Users</div>
+    {{-- Page content --}}
+    <div class="col">
+        {{-- Dash Status --}}
 
-                <div class="card-body">
+        {{-- Welcome Message --}}
+        <div class="row">
+            <h1 class="display-4 mr-auto">Welcome </h1>
+            <hr>
+        </div>
+        {{-- End Message --}}
 
-                    @foreach ($users as $user)
-                    <div class="row">
-                        <div class="col-6">
-                            {{$user->name}}
-                            @foreach ($user->roles as $role)
-                            <small class="text-muted"><span class="badge badge-info">{{$role->name}}</span></small>
-                            @endforeach
-                        </div>
-                        <div class="col-6">
-                            @if ($user->hasRole('admin'))
-
-                            @endif
-                        </div>
+        {{-- Cards --}}
+        <div class="row">
+            <div class="card-deck col-8">
+                <div class="card border-success">
+                    <div class="text-center card-header">
+                        <h4 class="statushead">USERS</h4>
                     </div>
-                    <hr>
-                    @endforeach
-
+                    <div class="card-body text-center">
+                        <h2 class="statusnum">{{$users->count()}}</h2>
+                    </div>
+                </div>
+                <div class="card border-primary">
+                    <div class="text-center card-header">
+                        <h4 class="statushead">VIEWPOINTS</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <h2 class="statusnum">{{$blogs->count()}}</h2>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-6">
-            <br>
-            <div class="card">
-                <div class="card-header">Views</div>
-
-                <div class="card-body">
-
-                    @foreach ($blogs as $blog)
-                    <div class="row">
-                        <div class="col-6">
-                            {{$loop->iteration}}
-                            {{$blog->getTranslation('title','en')}}
-                            {{-- <img src="{{asset($blog->image)}}" alt="" srcset=""> --}}
-    
-                            <div class="btn-group ml-3" role="group" aria-label="Button group">
-                            
-                                <a class="btn btn-outline-primary" href="{{ route('edit_blog_path',['blog'=>$blog->id]) }}">Edit
-                                </a>
-                                <form class="form-inline" action="{{ route('delete_blog_path',['blog'=>$blog->id]) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-outline-danger">Delete</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    @endforeach
-
-                </div>
-            </div>
-        </div>
+        {{-- End Cards --}}
+        {{-- End Dash Status --}}
     </div>
+    {{-- End Page Content  --}}
 </div>
 @endsection

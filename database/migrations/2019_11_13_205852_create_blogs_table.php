@@ -17,8 +17,6 @@ class CreateBlogsTable extends Migration
             $table->bigIncrements('id');
             $table->json('title');
             $table->json('content');
-            $table->json('audio')->nullable();
-            $table->json('video')->nullable();
             $table->json('image_notes')->nullable();
             $table->json('image2_notes')->nullable();
             $table->json('notes')->nullable();
