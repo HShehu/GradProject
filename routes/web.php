@@ -24,7 +24,6 @@ Route::group([
           return redirect('/');
       });
 
-
       //Users Views With Multilingual Functionality
       Route::name('users.index')->get('/users', 'UserController@index');
       Route::name('users.create')->get('/users/create', 'UserController@create');
@@ -50,25 +49,28 @@ Route::group([
       Route::name('blogs.edit')->get('/blogs/{blog}/edit', 'BlogController@edit');
       Route::name('blogs.show')->get('/blogs/{blog}', 'BlogController@show');
       
-      Route::group(['middleware' => ['role:super-admin']], function () {
+      Route::group(['middleware' => ['permission:Administer users']], function () {
           Route::get('/admin', 'UserController@admin')->name('admin');
+          Route::name('blogs.list')->get('/bloglist', 'BlogController@admin');
+          Route::name('comments.list')->get('/commentlist', 'CommentController@admin');
       });
   });
     
-Route::group(['middleware' => ['role:super-admin']], function () {
+Route::group(['middleware' => ['permission:Administer roles & permissions']], function () {
     Route::name('roles.update')->put('/roles/{role}', 'RoleController@update');
     Route::name('roles.destroy')->delete('/roles/{role}', 'RoleController@destroy');
     Route::name('roles.store')->post('/roles', 'RoleController@store');
-
-    Route::name('users.update')->put('/users/{user}', 'UserController@update');
-    Route::name('users.destroy')->delete('/users/{user}', 'UserController@destroy');
-    Route::name('users.store')->post('/users', 'UserController@store');
 
     Route::name('permissions.update')->put('/permissions/{permission}', 'PermissionController@update');
     Route::name('permissions.destroy')->delete('/permissions/{permission}', 'PermissionController@destroy');
     Route::name('permissions.store')->post('/permissions', 'PermissionController@store');
 });
 
+Route::group(['middleware' => ['permission:Administer users']], function () {
+    Route::name('users.update')->put('/users/{user}', 'UserController@update');
+    Route::name('users.destroy')->delete('/users/{user}', 'UserController@destroy');
+    Route::name('users.store')->post('/users', 'UserController@store');
+});
 
 Route::group(['middleware' => ['permission:edit blog posts']], function () {
     Route::name('blogs.update')->put('/blogs/{blog}', 'BlogController@update');
@@ -76,6 +78,8 @@ Route::group(['middleware' => ['permission:edit blog posts']], function () {
     Route::name('blogs.store')->post('/blogs', 'BlogController@store');
 });
 
+Route::name('printqr')->get('/printqr', 'QrController@index');
+Route::name('comments.destroy')->delete('/comment/{comment}', 'CommentController@destroy');
 
 
 

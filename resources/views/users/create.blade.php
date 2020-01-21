@@ -5,7 +5,7 @@
 
 @section('content')
 
-<div class="container text-center">
+<div class="container">
 
     <h1><i class='fa fa-user-plus'></i> Add User</h1>
     <hr>

@@ -15,21 +15,24 @@
 
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
                 aria-expanded="false" aria-controls="collapseExample">
-                Get QrCode
+                @lang('messages.qrCode')
             </button>
 
             @can ('edit blog posts')
             <div class="btn-group ml-3" role="group" aria-label="Button group">
 
                 <a class="btn btn-outline-primary"
-                    href="{{ route('blogs.edit',['blog'=>$blog->id,'locale'=>app()->getLocale()]) }}">Edit
+                    href="{{ route('blogs.edit',['blog'=>$blog->id,'locale'=>app()->getLocale()]) }}">
+                    @lang('messages.edit') @lang('messages.viewpoints')
                 </a>
                 <form class="form-inline"
                     action="{{ route('blogs.destroy',['blog'=>$blog->id,'locale'=>app()->getLocale()]) }}"
                     method="POST">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-outline-danger">Delete</button>
+                    <button type="submit" class="btn btn-outline-danger">
+                        @lang('messages.delete') @lang('messages.viewpoints')
+                    </button>
                 </form>
 
             </div>
@@ -85,13 +88,21 @@
             </div>
 
             <hr />
-            <h4 class="display-3">Comments</h4>
+            <h4 class="display-3">@lang('messages.comment')</h4>
 
 
             @foreach($blog->comments as $comment)
             <div class="display-comment">
                 <strong>{{ $comment->user->name }}</strong>
                 <p class="lead">{{ $comment->body }}</p>
+                @can('edit comment')
+                {!! Form::open(['method' => 'DELETE', 'route' =>
+                ['comments.destroy','comment'=>$comment->id]]) !!}
+                <button type="submit" class="btn btn-outline-danger">
+                    @lang('messages.delete') @lang('messages.comment')
+                </button>
+                {!! Form::close() !!}
+                @endcan
             </div>
             @endforeach
 
@@ -104,14 +115,15 @@
                     <input type="hidden" name="blog_id" value="{{ $blog->id }}" />
                 </div>
                 <div class="form-group">
-                    <input type="submit" class="btn btn-warning" value="Add Comment" />
+                    <input type="submit" class="btn btn-warning"
+                        value="@lang('messages.add') @lang('messages.comment')" />
                 </div>
             </form>
             @endauth
             @guest
             <h5 class="ml-3 display-5 lead">
                 <a href="{{route('login',['locale'=>app()->getLocale()])}}">
-                    Login to Comment
+                    @lang('messages.login')
                 </a>
             </h5>
             @endguest

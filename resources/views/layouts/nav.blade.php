@@ -51,14 +51,11 @@
                 </a>
 
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    {{-- @if (Auth::user()->hasRole('admin'))
-                    <a class="dropdown-item" href="{{route('admin')}}">Admin Dashboard</a>
-                    @endif
-
-                    @if (Auth::user()->hasRole('user'))
-                    <a class="dropdown-item" href="{{route('user', app()->getLocale())}}">User Dashboard</a>
-                    @endif --}}
-
+                    @can('Administer users')
+                    <a class="dropdown-item" href="{{route('admin',['locale'=>app()->getLocale()])}}">
+                        @lang('messages.admin')
+                    </a>
+                    @endcan
                     <a class="dropdown-item" href="{{route('logout', app()->getLocale())}}">
                         @lang('messages.logout')
                     </a>
@@ -76,8 +73,10 @@
         </div>
 
         <ul class="navbar-nav">
+
             <li class="nav-item active">
-                <a class="nav-link" href="{{route('blogs.index', app()->getLocale())}}">
+
+                <a class="nav-link home mr-5" href="{{route('blogs.index', app()->getLocale())}}">
                     @lang('messages.home')
                 </a>
             </li>

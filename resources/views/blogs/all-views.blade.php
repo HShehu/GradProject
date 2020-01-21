@@ -8,6 +8,7 @@ All Views
 
 <br>
 
+
 <div class="container">
     <div class="row">
 
@@ -16,20 +17,21 @@ All Views
             <div class="card views">
 
                 <div class="card-header text-center">
-                    <a href="{{ route('blog_path', ['blog' => $blog->id,'locale'=>app()->getLocale()]) }}">
+                    <a href="{{ route('blogs.show', ['blog' => $blog->id,'locale'=>app()->getLocale()]) }}">
                         {{ $blog->title }}
                     </a>
                 </div>
 
                 <div class="card-body">
-                    <a href="{{ route('blog_path', ['blog' => $blog->id,'locale'=>app()->getLocale()]) }}">
+                    <a href="{{ route('blogs.show', ['blog' => $blog->id,'locale'=>app()->getLocale()]) }}">
                         <img class="img-fluid card-img-top" src="{{asset($blog->image)}}" alt="">
                     </a>
 
                     <p class="text lead">
                         {{Str::words($blog->content,20,'...')}}
                     </p>
-                    <a href="{{ route('blog_path', ['blog' => $blog->id,'locale'=>app()->getLocale()]) }}">Read More</a>
+                    <a href="{{ route('blogs.show', ['blog' => $blog->id,'locale'=>app()->getLocale()]) }}">Read
+                        More</a>
                 </div>
             </div>
         </div>

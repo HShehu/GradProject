@@ -57,7 +57,7 @@ class UserController extends Controller
         $this->validate($request, [
             'name'=>'required|max:120',
             'email'=>'required|email|unique:users',
-            'password'=>'required|min:6|confirmed'
+            'password'=>'required|min:6|confirmed',
         ]);
 
         $user = User::create($request->only('email', 'name', 'password')); //Retrieving only the email and password data
@@ -73,8 +73,8 @@ class UserController extends Controller
         //Redirect to the users.index view and display message
         return redirect()->route('users.index', app()->getLocale())
             ->with(
-                'flash_message',
-                'User successfully added.'
+                'success',
+                'User '.$user->name.' successfully added.'
             );
     }
 
@@ -91,7 +91,7 @@ class UserController extends Controller
 
     /**
     * Show the form for editing the specified resource.
-    *
+    *0
     * @param  int  $id
     * @return \Illuminate\Http\Response
     */
@@ -130,7 +130,7 @@ class UserController extends Controller
         }
         return redirect()->route('users.index', app()->getLocale())
             ->with(
-                'flash_message',
+                'success',
                 'User successfully edited.'
             );
     }
@@ -150,7 +150,7 @@ class UserController extends Controller
         return redirect()->route('users.index', ['locale'=>app()->getLocale()])
             ->with(
                 'success',
-                'User successfully deleted.'
+                'User '.$user->name.' successfully deleted.'
             );
     }
 

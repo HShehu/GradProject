@@ -1,6 +1,13 @@
 body,
 html {
+    background-color: #dbdbe769;
     height: 100%;
+}
+
+.home {
+    width: 65%;
+    background-color: #e7edee;
+    overflow: auto;
 }
 
 .navbar-brand {
@@ -189,13 +196,12 @@ a.fb {
 @import url('https://fonts.googleapis.com/css?family=Anton&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Abel&display=swap');
 
-.statusnum
-{
+.statusnum {
     font-family: 'Anton', sans-serif;
     font-size: 130px;
 }
-.statushead
-{
+
+.statushead {
     font-family: 'Abel', sans-serif;
     text-shadow: burlywood;
     font-size: 25px;

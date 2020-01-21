@@ -31,7 +31,7 @@ class BlogController extends Controller
     {
         //
         $blogs = Blog::all();
-        return view('blog.all-views', ['blogs'=>$blogs]);
+        return view('blogs.all-views', ['blogs'=>$blogs]);
     }
 
     /**
@@ -50,7 +50,7 @@ class BlogController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $locale)
+    public function store(Request $request)
     {
 
         // Validate Fields
@@ -91,7 +91,10 @@ class BlogController extends Controller
         
         $blog->save();
             
-        return redirect()->route('admin',['locale' => app()->getLocale()]);
+        return redirect()->route('blogs.list',['locale' => app()->getLocale()])->with(
+            'success',
+            $blog->title.' Viewpoint successfully created.'
+        );
     }
 
     /**
@@ -128,7 +131,7 @@ class BlogController extends Controller
     //  * @param  int  $id
     //  * @return \Illuminate\Http\Response
     //  */
-    public function update(Request $request, $locale, $id)
+    public function update(Request $request, $id)
     {
         
         $blog = Blog::findOrFail($id);
@@ -168,7 +171,10 @@ class BlogController extends Controller
         
         $blog->update();
 
-        return redirect()->route('admin',['locale' => app()->getLocale()]);
+        return redirect()->route('blogs.list',['locale' => app()->getLocale()])->with(
+            'success',
+            $blog->title.' Viewpoint successfully added.'
+        );
     }
 
     // /**
@@ -178,10 +184,20 @@ class BlogController extends Controller
     //  * @return \Illuminate\Http\Response
     //  */
 
-    public function destroy($locale, $id)
+    public function destroy($id)
     {
         $blog = Blog::findOrFail($id);
         $blog->delete();
-        return redirect()->route('admin',['locale' => app()->getLocale()]);
+        return redirect()->route('blogs.list',['locale' => app()->getLocale()])->with(
+            'success',
+            $blog->title.'Viewpoint successfully deleted.'
+        );
+    }
+
+    public function admin()
+    {
+        $blogs = Blog::all(); //Get all permissions
+
+        return view('blogs.admin-view')->with('blogs', $blogs);
     }
 }

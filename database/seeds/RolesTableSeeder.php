@@ -20,6 +20,8 @@ class RolesTableSeeder extends Seeder
         // create permissions
         Permission::create(['name' => 'edit blog posts']);
         Permission::create(['name' => 'Administer roles & permissions']);
+        Permission::create(['name' => 'Administer users']);
+        Permission::create(['name' => 'edit comment']);
 
         // create roles and assign created permissions
 

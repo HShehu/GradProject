@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Blog;
 use App\Comment;
+use App\User;
 
 class CommentController extends Controller
 {
@@ -21,7 +22,31 @@ class CommentController extends Controller
         $blog = Blog::find($request->blog_id);
         $blog->comments()->save($comment);
 
-        return back();
+        return back()->with(
+            'success',
+            'Comment successfully added.'
+        );
+        ;
+    }
+
+
+    public function destroy($id)
+    {
+        $comment = Comment::findOrFail($id);
+        $user = User::where('id', $comment->user_id);
+        $comment->delete();
+        return redirect()->back()->with(
+            'success',
+            ' Comment successfully deleted.'
+        );
+    }
+
+    public function admin()
+    {
+        $blogs = Blog::all(); //Get all permissions
+        $comments = Comment::all();
+
+        return view('comments.admin-view')->with(['comments'=> $comments,'blogs'=>$blogs]);
     }
 
     //  public function replyStore(Request $request)

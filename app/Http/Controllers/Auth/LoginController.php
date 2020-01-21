@@ -77,7 +77,7 @@ class LoginController extends Controller
 
         $user = $this->userFindorCreate($provider_user, $provider);
         Auth::login($user, true);
-        return redirect()->back();
+        return redirect('/');
         // $token = $user->token;
     }
 
@@ -87,7 +87,7 @@ class LoginController extends Controller
 
         if (!$user) {
             $user = new User;
-            $user->assignRole('super-admin'); 
+            $user->assignRole('user'); 
             $user->name = $p_user->getName();
             $user->email = $p_user->getEmail();
             $user->provider = $provider;

@@ -22,11 +22,11 @@
 
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Date/Time Added</th>
-                            <th>User Roles</th>
-                            <th>Operations</th>
+                            <th>@lang('messages.name')</th>
+                            <th>@lang('messages.email')</th>
+                            <th>@lang('messages.dateTime')</th>
+                            <th>@lang('messages.users') @lang('messages.roles')</th>
+                            <th>@lang('messages.operations')</th>
                         </tr>
                     </thead>
 
@@ -45,9 +45,12 @@
                                 'user'=>$user->id] ]) !!}
                                 <a href="{{ route('users.edit', ['user'=>$user->id,'locale'=>app()->getLocale()]) }}"
                                     class="btn btn-info pull-left" style="margin-right: 3px;">
-                                    Edit
+                                    @lang('messages.edit')
                                 </a>
-                                {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
+
+                                <button type="submit" class="btn btn-outline-danger">
+                                    @lang('messages.delete')
+                                </button>
                                 {!! Form::close() !!}
 
                             </td>
